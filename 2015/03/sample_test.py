@@ -3,6 +3,18 @@ from itertools import islice
 import solution
 
 
+def multiples_of(num):
+    i = 1
+    while True:
+        yield num * i
+        i += 1
+
+
+def ones():
+    while True:
+        yield 1
+
+
 class TestFibonacci(unittest.TestCase):
     def test_fibonacci(self):
         fibonacci = solution.fibonacci()
@@ -36,6 +48,25 @@ class TestIntertwine(unittest.TestCase):
             list(fibonacci_3_prime_3_bg_3),
             [1, 1, 2, 2, 3, 5, 'а', 'б', 'в']
         )
+
+    
+    def test_with_generator_definitions(self):
+        with_generator_definitions = intertwined_sequences(
+            [
+                {'sequence': 'multiples_of', 'length': 3, 'num': 12},
+                {'sequence': 'ones', 'length': 3},
+                {'sequence': 'multiples_of', 'length': 3}
+            ],
+            generator_definitions={
+                'multiples_of': multiples_of,
+                'ones': ones
+            }
+        )
+        self.assertEqual(
+            list(with_generator_definitions),
+            [12, 24, 36, 1, 1, 1, 48, 60, 72]
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
